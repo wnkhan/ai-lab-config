@@ -1,0 +1,24 @@
+# Local environment/secrets
+.env
+.env.*
+!.env.example
+
+# Local Docker/Compose overrides
+compose.override.yaml
+docker-compose.override.yml
+
+# Runtime data or accidental bind-mounted state
+data/
+volumes/
+models/
+ollama-data/
+open-webui-data/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+

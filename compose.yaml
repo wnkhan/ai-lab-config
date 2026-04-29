@@ -1,0 +1,55 @@
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ai-lab-ollama
+    ports:
+      - "${OLLAMA_HOST_PORT}:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+    networks:
+      - ai-lab
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]
+
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:v0.9.2
+    container_name: ai-lab-open-webui
+    depends_on:
+      - ollama
+    ports:
+      - "${OPENWEBUI_PORT}:8080"
+    environment:
+      WEBUI_SECRET_KEY: "${WEBUI_SECRET_KEY}"
+      OLLAMA_BASE_URL: "http://ollama:11434"
+    volumes:
+      - open-webui-data:/app/backend/data
+    restart: unless-stopped
+    networks:
+      - ai-lab
+
+  searxng:
+    image: searxng/searxng:latest
+    container_name: ai-lab-searxng
+    ports:
+      - "8080:8080"
+    environment:
+      SEARXNG_SECRET: "${SEARXNG_SECRET}"
+    volumes:
+      - ./config/searxng:/etc/searxng
+    restart: unless-stopped
+    networks:
+      - ai-lab
+
+networks:
+  ai-lab:
+
+volumes:
+  ollama-data:
+  open-webui-data:
+  
