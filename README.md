@@ -122,6 +122,34 @@ config/searxng/settings.yml
 
 The SearXNG secret is supplied through the `SEARXNG_SECRET` variable in your local `.env` file. Keep real secrets out of `settings.yml` so the repository can remain public.
 
+The included SearXNG settings allow JSON responses, which Open WebUI needs for web search.
+
+## Configure Web Search In Open WebUI
+
+After the stack is running, sign in to Open WebUI with an admin account and configure web search:
+
+1. Open `http://localhost:3001`.
+2. Go to `Admin Panel` -> `Settings` -> `Web Search`.
+3. Enable web search.
+4. Set the web search engine to `searxng`.
+5. Set the SearXNG query URL to:
+
+   ```text
+   http://searxng:8080/search?q=<query>
+   ```
+
+6. Set the result count and concurrent requests to your preference, then save the settings.
+
+Use the Compose service name `searxng` in this URL because Open WebUI connects from inside the Docker network. The host URL `http://localhost:8080` is useful in your browser, but it is not the right URL for Open WebUI running in the container.
+
+You can verify that Open WebUI can reach SearXNG with:
+
+```sh
+docker exec -it ai-lab-open-webui curl "http://searxng:8080/search?q=test&format=json"
+```
+
+In a chat, enable web search from the message composer controls before sending a prompt that should use live search results. Open WebUI treats web search as a per-chat setting, so you may need to enable it again in new chats.
+
 ## Stop Or Update
 
 Stop containers:
