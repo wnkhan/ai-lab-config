@@ -46,6 +46,15 @@ services:
     networks:
       - ai-lab
 
+  grid-mcp-server:
+    image: erddap-grid-mcp:dev
+    container_name: erddap-grid-mcp
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    networks:
+      - ai-lab
+
 networks:
   ai-lab:
 
